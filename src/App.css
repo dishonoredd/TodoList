@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat";
+}
+
+.header {
+  height: 60px;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.header p {
+  color: white;
+  font-weight: 500;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.header p:hover {
+  color: rgb(230, 230, 230);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #edeef0;
+}
+::-webkit-scrollbar-thumb {
+  background-color: green;
+}
+
+.top {
+  margin-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.input {
+  height: 100%;
+  width: 80%;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding-left: 20px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input__btn {
+  height: 100%;
+  width: 17%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: green;
+  border: 0px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+}
+
+.input__btn:hover {
+  background-color: rgb(0, 115, 0);
+}
+
+.input__btn:active {
+  background-color: rgb(0, 100, 0);
+}
