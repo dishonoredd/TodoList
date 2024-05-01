@@ -24,7 +24,7 @@
 }
 
 .header p:hover {
-  color: rgb(230, 230, 230);
+  color: rgb(247, 247, 247);
 }
 
 ::-webkit-scrollbar {
@@ -53,7 +53,7 @@
   width: 80%;
   font-size: 20px;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid rgb(45, 45, 45);
   padding-left: 20px;
 }
 
@@ -80,4 +80,121 @@
 
 .input__btn:active {
   background-color: rgb(0, 100, 0);
+}
+
+.ultodo {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 130px 130px 130px 130px 130px 130px 130px 130px;
+  list-style: none;
+}
+
+.element {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo__container {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.55);
+  border-top: 15px solid green;
+  border-radius: 5px;
+}
+
+.changeinput {
+  width: 90px;
+  height: 100%;
+  border: 1px solid rgb(45, 45, 45);
+  border-radius: 2px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  font-size: 11px;
+  padding-left: 1px;
+}
+
+.input__container {
+  display: flex;
+  height: 22px;
+  gap: 10px;
+}
+
+.todotext {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.todo {
+  overflow-x: scroll;
+  white-space: nowrap;
+  width: 250px;
+}
+
+.todo::-webkit-scrollbar {
+  width: 3px;
+  height: 5px;
+}
+
+.close__btn {
+  height: 100%;
+  width: 100px;
+
+  cursor: pointer;
+  background-color: green;
+  border: 0px;
+  border-radius: 2px;
+  color: white;
+  font-weight: 500;
+}
+
+.close__btn:hover {
+  background-color: rgb(0, 115, 0);
+}
+
+.close__btn:active {
+  background-color: rgb(0, 100, 0);
+}
+
+.done__btn {
+  height: 100%;
+  width: 22px;
+
+  cursor: pointer;
+  background-color: green;
+  border: 0px;
+  border-radius: 2px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  color: white;
+  font-weight: 500;
+}
+
+.cont {
+  height: 100%;
+}
+
+.close {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  margin-right: 21px;
+  margin-bottom: 8px;
+  border: 0px;
+  background-color: transparent;
+  cursor: pointer;
 }
