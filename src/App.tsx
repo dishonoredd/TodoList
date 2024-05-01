@@ -8,6 +8,8 @@ function App() {
   const [value, setValue] = useState(todoText);
   const result = [...todoList];
 
+  ///for deploy
+
   useEffect(() => {
     setValue(todoText);
   });
