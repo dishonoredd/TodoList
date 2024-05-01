@@ -198,3 +198,76 @@
   background-color: transparent;
   cursor: pointer;
 }
+
+.knopka {
+  display: none;
+  height: 30px;
+  width: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: green;
+  border: 0px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 1300px) {
+  .changeinput {
+    width: 60px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .header p {
+    font-size: 12px;
+  }
+  .input {
+    height: 30px;
+    font-size: 14px;
+    width: 90%;
+  }
+  .input__btn {
+    display: none;
+  }
+  .knopka {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top {
+    margin-top: 10px;
+  }
+  .ultodo {
+    margin-top: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px;
+  }
+  .todo__container {
+    height: 80%;
+    border-top: 6px solid green;
+  }
+  .close {
+    margin-right: 15px;
+    font-size: 12px;
+  }
+  .input__container {
+    height: 17px;
+  }
+  .done__btn {
+    width: 30px;
+    height: 17px;
+  }
+  .cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .todo::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+}

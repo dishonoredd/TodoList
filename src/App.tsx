@@ -19,6 +19,17 @@ function App() {
     setTodoList(result);
   }
 
+  function addTodo() {
+    if (todoText.length > 0) {
+      setValue(todoText);
+      result.unshift({ text: value });
+      setTodoList(result);
+      setTodoText("");
+    } else {
+      alert("Число введенных символов изначально должно быть больше чем 0");
+    }
+  }
+
   return (
     <div className="wrapper">
       <header className="header">
@@ -36,22 +47,11 @@ function App() {
           }}
         />
 
-        <button
-          className="input__btn"
-          onClick={() => {
-            if (todoText.length > 0) {
-              setValue(todoText);
-              result.unshift({ text: value });
-              setTodoList(result);
-              setTodoText("");
-            } else {
-              alert(
-                "Число введенных символов изначально должно быть больше чем 0"
-              );
-            }
-          }}
-        >
+        <button className="input__btn" onClick={addTodo}>
           Добавить
+        </button>
+        <button onClick={addTodo} className="knopka">
+          +
         </button>
       </div>
 
