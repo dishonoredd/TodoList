@@ -34,41 +34,39 @@ function App() {
                 <p>Добавить заметку</p>
                 <p>Выполненные заметки</p>
             </header>
-            <div className="top">
-                <input
-                    className="input"
-                    value={todoText}
-                    type="text"
-                    placeholder="Напишите заметку"
-                    onKeyDown={(ev) => {
-                        if (ev.key === "Enter") {
-                            addTodo();
-                        }
-                    }}
-                    onChange={(e) => {
-                        setTodoText(e.target.value);
-                    }}
-                />
+            <div style={{ padding: 20 }}>
+                <div className="top">
+                    <input
+                        className="input"
+                        value={todoText}
+                        type="text"
+                        placeholder="Напишите заметку"
+                        onKeyDown={(ev) => {
+                            if (ev.key === "Enter") {
+                                addTodo();
+                            }
+                        }}
+                        onChange={(e) => {
+                            setTodoText(e.target.value);
+                        }}
+                    />
 
-                <button className="input__btn" onClick={addTodo} disabled={!todoText}>
-                    Добавить
-                </button>
-                <button onClick={addTodo} className="knopka">
-                    +
-                </button>
+                    <button className="input__btn" onClick={addTodo} disabled={!todoText}>
+                        Добавить
+                    </button>
+                    <button onClick={addTodo} className="knopka">
+                        +
+                    </button>
+                </div>
+
+                <ul className="ultodo">
+                    {todoList.map((todo, i) => (
+                        <li key={todo.id} className="element">
+                            <Todo todo={todo} onDelete={() => deleteTodo(i)} onEditTodo={(todo) => onEditTodo(todo, i)} />
+                        </li>
+                    ))}
+                </ul>
             </div>
-
-            <ul className="ultodo">
-                {todoList.map((todo, i) => (
-                    <li key={todo.text} className="element">
-                        <Todo todo={todo} onDelete={() => deleteTodo(i)} onEditTodo={(todo) => onEditTodo(todo, i)} />
-
-                        <button className="close" onClick={() => deleteTodo(i)}>
-                            ✕
-                        </button>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 }
@@ -85,39 +83,42 @@ function Todo(props: TodoProps) {
 
     return (
         <section className="todo__container">
-            <div className="todo">
-                <p className="todotext">{props.todo.text}</p>
-            </div>
+            <p className="todotext">{props.todo.text}</p>
             <div className="input__container">
-                <button
-                    className="close__btn"
-                    onClick={() => {
-                        setOpen(!open);
-                    }}
-                >
-                    {(!open && "Изменить") || "Закрыть"}
+                <div style={{ display: "flex" }}>
+                    <button
+                        className="close__btn"
+                        onClick={() => {
+                            setOpen(!open);
+                        }}
+                    >
+                        {(!open && "Изменить") || "Закрыть"}
+                    </button>
+                    {open && (
+                        <>
+                            <input
+                                className="changeinput"
+                                type="text"
+                                placeholder="Изменить"
+                                value={editText}
+                                onChange={(ev) => setEditText(ev.target.value)}
+                            />
+                            <button
+                                className="done__btn"
+                                onClick={() => {
+                                    const todo = { ...props.todo, text: editText };
+                                    props.onEditTodo(todo);
+                                    setOpen(false);
+                                }}
+                            >
+                                ∨
+                            </button>
+                        </>
+                    )}
+                </div>
+                <button className="close" onClick={() => props.onDelete()}>
+                    ✕
                 </button>
-                {open && (
-                    <div className="cont">
-                        <input
-                            className="changeinput"
-                            type="text"
-                            placeholder="Изменить"
-                            value={editText}
-                            onChange={(ev) => setEditText(ev.target.value)}
-                        />
-                        <button
-                            className="done__btn"
-                            onClick={() => {
-                                const todo = { ...props.todo, text: editText };
-                                props.onEditTodo(todo);
-                                setOpen(false);
-                            }}
-                        >
-                            ∨
-                        </button>
-                    </div>
-                )}
             </div>
         </section>
     );
