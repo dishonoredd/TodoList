@@ -1,129 +1,126 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
+type Todo = {
+    text: string;
+    id: string;
+};
+
 function App() {
-  const [todoText, setTodoText] = useState("");
-  const [changeText, setChangeText] = useState("");
-  const [todoList, setTodoList] = useState<TodoProps[]>([]);
-  const [value, setValue] = useState(todoText);
-  const result = [...todoList];
+    const [todoText, setTodoText] = useState("");
+    const [todoList, setTodoList] = useState<Todo[]>([]);
+    const result = [...todoList];
 
-  ///for deploy
-
-  useEffect(() => {
-    setValue(todoText);
-  });
-
-  function deleteTodo(i: number) {
-    result.splice(i, 1);
-    setTodoList(result);
-  }
-
-  function addTodo() {
-    if (todoText.length > 0) {
-      setValue(todoText);
-      result.unshift({ text: value });
-      setTodoList(result);
-      setTodoText("");
-    } else {
-      alert("Число введенных символов изначально должно быть больше чем 0");
+    function deleteTodo(i: number) {
+        result.splice(i, 1);
+        setTodoList(result);
     }
-  }
 
-  return (
-    <div className="wrapper">
-      <header className="header">
-        <p>Добавить заметку</p>
-        <p>Выполненные заметки</p>
-      </header>
-      <div className="top">
-        <input
-          className="input"
-          value={todoText}
-          type="text"
-          placeholder="Напишите заметку"
-          onChange={(e) => {
-            setTodoText(e.target.value);
-          }}
-        />
+    function onEditTodo(newTodo: Todo, i: number) {
+        result.splice(i, 1, newTodo);
+        // ИЛИ result[i] = newTodo
+        setTodoList(result);
+    }
 
-        <button className="input__btn" onClick={addTodo}>
-          Добавить
-        </button>
-        <button onClick={addTodo} className="knopka">
-          +
-        </button>
-      </div>
+    function addTodo() {
+        result.unshift({ text: todoText, id: crypto.randomUUID() });
+        setTodoList(result);
+        setTodoText("");
+    }
 
-      <ul className="ultodo">
-        {todoList.map((todo, i) => (
-          <li key={i} className="element">
-            <Todo
-              changetext={changeText}
-              openButton={() => {
-                setValue((todo.text = changeText));
-                setChangeText("");
-              }}
-              setChangeText={(e) => {
-                setChangeText(e.target.value);
-              }}
-              text={todo.text}
-              onClick={() => {
-                result.splice(i, 1);
-                setTodoList(result);
-              }}
-            />
-            <button className="close" onClick={() => deleteTodo(i)}>
-              ✕
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    return (
+        <div className="wrapper">
+            <header className="header">
+                <p>Добавить заметку</p>
+                <p>Выполненные заметки</p>
+            </header>
+            <div className="top">
+                <input
+                    className="input"
+                    value={todoText}
+                    type="text"
+                    placeholder="Напишите заметку"
+                    onKeyDown={(ev) => {
+                        if (ev.key === "Enter") {
+                            addTodo();
+                        }
+                    }}
+                    onChange={(e) => {
+                        setTodoText(e.target.value);
+                    }}
+                />
+
+                <button className="input__btn" onClick={addTodo} disabled={!todoText}>
+                    Добавить
+                </button>
+                <button onClick={addTodo} className="knopka">
+                    +
+                </button>
+            </div>
+
+            <ul className="ultodo">
+                {todoList.map((todo, i) => (
+                    <li key={todo.text} className="element">
+                        <Todo todo={todo} onDelete={() => deleteTodo(i)} onEditTodo={(todo) => onEditTodo(todo, i)} />
+
+                        <button className="close" onClick={() => deleteTodo(i)}>
+                            ✕
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 }
 
 type TodoProps = {
-  text: string;
-  onClick?: () => void;
-  setChangeText?: (e: any) => void;
-  openButton?: () => void;
-  changetext?: string;
+    todo: Todo;
+    onDelete: () => void;
+    onEditTodo: (todo: Todo) => void;
 };
 
 function Todo(props: TodoProps) {
-  const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [editText, setEditText] = useState(props.todo.text);
 
-  return (
-    <section className="todo__container">
-      <div className="todo">
-        <p className="todotext">{props.text}</p>
-      </div>
-      <div className="input__container">
-        <button
-          className="close__btn"
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {(!open && "Изменить") || "Закрыть"}
-        </button>
-        {open && (
-          <div className="cont">
-            <input
-              className="changeinput"
-              type="text"
-              placeholder="Изменить"
-              onChange={props.setChangeText}
-            />
-            <button className="done__btn" onClick={props.openButton}>
-              ∨
-            </button>
-          </div>
-        )}
-      </div>
-    </section>
-  );
+    return (
+        <section className="todo__container">
+            <div className="todo">
+                <p className="todotext">{props.todo.text}</p>
+            </div>
+            <div className="input__container">
+                <button
+                    className="close__btn"
+                    onClick={() => {
+                        setOpen(!open);
+                    }}
+                >
+                    {(!open && "Изменить") || "Закрыть"}
+                </button>
+                {open && (
+                    <div className="cont">
+                        <input
+                            className="changeinput"
+                            type="text"
+                            placeholder="Изменить"
+                            value={editText}
+                            onChange={(ev) => setEditText(ev.target.value)}
+                        />
+                        <button
+                            className="done__btn"
+                            onClick={() => {
+                                const todo = { ...props.todo, text: editText };
+                                props.onEditTodo(todo);
+                                setOpen(false);
+                            }}
+                        >
+                            ∨
+                        </button>
+                    </div>
+                )}
+            </div>
+        </section>
+    );
 }
 
 export default App;
