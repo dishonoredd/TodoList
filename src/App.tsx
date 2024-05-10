@@ -131,7 +131,7 @@ function Todo(props: TodoProps) {
         <p className="todotext">{props.todo.text}</p>
       </div>
       <div className="input__container">
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", gap: "5px" }}>
           <button
             onClick={() => {
               const todo = { ...props.todo, completed: true };
@@ -193,9 +193,6 @@ function DoneTodo() {
         <div className="todo__container">
           <div className="todoscroll">
             <p key={todo.id}>{todo.text}</p>
-          </div>
-          <div className="input__container">
-            <div style={{ display: "flex" }}></div>
           </div>
         </div>
       ))}
