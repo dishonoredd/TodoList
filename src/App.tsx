@@ -100,7 +100,7 @@ function HomePage() {
         <ul className="ultodo">
           {todoList
             .filter((t) => !t.completed)
-            .map((todo, i) => (
+            .map((todo) => (
               <li key={todo.id} className="element">
                 <Todo
                   todo={todo}
@@ -185,7 +185,7 @@ const getDoneInitialTodos = (): Todo[] => {
 };
 
 function DoneTodo() {
-  const [done, setDone] = useState<Todo[]>(getDoneInitialTodos());
+  const done: Todo[] = getDoneInitialTodos();
 
   return (
     <div>
