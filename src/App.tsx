@@ -5,6 +5,7 @@ import { Link, Outlet, Route, Routes } from "react-router-dom"
 type Todo = {
     text: string
     id: string
+    completed: boolean
 }
 
 function App() {
@@ -60,7 +61,7 @@ function HomePage() {
     }
 
     function addTodo() {
-        result.unshift({ text: todoText, id: crypto.randomUUID() })
+        result.unshift({ text: todoText, id: crypto.randomUUID(), completed: false })
         setTodoList(result)
         setTodoText("")
     }
@@ -93,11 +94,13 @@ function HomePage() {
                 </div>
 
                 <ul className="ultodo">
-                    {todoList.map((todo, i) => (
-                        <li key={todo.id} className="element">
-                            <Todo todo={todo} onDelete={() => deleteTodo(i)} onEditTodo={(todo) => onEditTodo(todo, i)} />
-                        </li>
-                    ))}
+                    {todoList
+                        .filter((t) => !t.completed)
+                        .map((todo, i) => (
+                            <li key={todo.id} className="element">
+                                <Todo todo={todo} onDelete={() => deleteTodo(i)} onEditTodo={(todo) => onEditTodo(todo, i)} />
+                            </li>
+                        ))}
                 </ul>
             </div>
         </div>
@@ -121,7 +124,13 @@ function Todo(props: TodoProps) {
             </div>
             <div className="input__container">
                 <div style={{ display: "flex" }}>
-                    <button onClick={() => {}} className="close__btn">
+                    <button
+                        onClick={() => {
+                            const todo = { ...props.todo, completed: true }
+                            props.onEditTodo(todo)
+                        }}
+                        className="close__btn"
+                    >
                         Done
                     </button>
                     <button
@@ -162,8 +171,13 @@ function Todo(props: TodoProps) {
     )
 }
 
+const getDoneInitialTodos = (): Todo[] => {
+    const todos: Todo[] = JSON.parse(localStorage.getItem("todoList") ?? "[]")
+    return todos.filter((todo) => todo.completed)
+}
+
 function DoneTodo() {
-    const [done, setDone] = useState<Todo[]>([])
+    const [done, setDone] = useState<Todo[]>(getDoneInitialTodos())
 
     return (
         <div>
