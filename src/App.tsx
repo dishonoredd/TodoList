@@ -139,7 +139,7 @@ function Todo(props: TodoProps) {
             }}
             className="close__btn"
           >
-            Done
+            Выполнить
           </button>
           <button
             className="close__btn"
