@@ -79,11 +79,11 @@ function HomePage() {
             value={todoText}
             type="text"
             placeholder="Напишите заметку"
-            onKeyDown={(ev) => {
-              if (ev.key === "Enter") {
-                addTodo();
-              }
-            }}
+            // onKeyDown={(ev) => {
+            //   if (ev.key === "Enter") {
+            //     addTodo();
+            //   }
+            // }}
             onChange={(e) => {
               setTodoText(e.target.value);
             }}
@@ -188,11 +188,18 @@ function DoneTodo() {
   const done: Todo[] = getDoneInitialTodos();
 
   return (
-    <div>
+    <section className="ultodo">
       {done.map((todo) => (
-        <p key={todo.id}>{todo.text}</p>
+        <div className="todo__container">
+          <div className="todoscroll">
+            <p key={todo.id}>{todo.text}</p>
+          </div>
+          <div className="input__container">
+            <div style={{ display: "flex" }}></div>
+          </div>
+        </div>
       ))}
-    </div>
+    </section>
   );
 }
 

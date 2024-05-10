@@ -82,7 +82,8 @@ button {
 }
 
 .ultodo {
-  margin-top: 50px;
+  margin-top: 40px;
+  padding: 10px;
   display: grid;
   gap: 10px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
