@@ -20,14 +20,15 @@ button {
   padding: 20px 0;
 }
 
-.header p {
+.headerlink {
   color: white;
   font-weight: 500;
   transition: 0.2s;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.header p:hover {
+.headerlink:hover {
   color: rgb(247, 247, 247);
 }
 
@@ -43,7 +44,7 @@ button {
 }
 
 .top {
-  margin-top: 40px;
+  margin-top: 10px;
   display: flex;
   gap: 12px;
 }
@@ -98,6 +99,10 @@ button {
   box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.55);
   border-top: 15px solid green;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .changeinput {
@@ -124,7 +129,12 @@ button {
   margin-bottom: 20px;
 }
 
-.todo::-webkit-scrollbar {
+.todoscroll {
+  width: 300px;
+  overflow-x: scroll;
+}
+
+.todoscroll::-webkit-scrollbar {
   width: 3px;
   height: 5px;
 }
