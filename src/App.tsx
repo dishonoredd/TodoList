@@ -1,203 +1,164 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { Link, Outlet, Route, Routes } from "react-router-dom";
-
-type Todo = {
-  text: string;
-  id: string;
-  completed?: boolean;
-};
+import { useState } from "react"
+import "./App.css"
+import { Link, Outlet, Route, Routes } from "react-router-dom"
+import { Todo, todoStore } from "./todo-store"
+import { observer } from "mobx-react-lite"
 
 function App() {
-  return (
-    <Routes>
-      <Route element={<Header />}>
-        <Route path="" index element={<HomePage />} />
-        <Route path="/done" element={<DoneTodo />} />
-      </Route>
-    </Routes>
-  );
+    return (
+        <Routes>
+            <Route element={<Header />}>
+                <Route path="" index element={<HomePage />} />
+                <Route path="/done" element={<DoneTodo />} />
+            </Route>
+        </Routes>
+    )
 }
 
 function Header() {
-  return (
-    <>
-      <header className="header">
-        <Link className="headerlink" to="">
-          Добавить заметку
-        </Link>
-        <Link className="headerlink" to="/done">
-          Выполненные заметки
-        </Link>
-      </header>
-      <Outlet />
-    </>
-  );
+    return (
+        <>
+            <header className="header">
+                <Link className="headerlink" to="">
+                    Добавить заметку
+                </Link>
+                <Link className="headerlink" to="/done">
+                    Выполненные заметки
+                </Link>
+            </header>
+            <Outlet />
+        </>
+    )
 }
 
-const getInitialTodos = (): Todo[] => {
-  return JSON.parse(localStorage.getItem("todoList") ?? "[]");
-};
+const HomePage = observer(() => {
+    const [todoText, setTodoText] = useState("")
 
-function HomePage() {
-  const [todoText, setTodoText] = useState("");
-  const [todoList, setTodoList] = useState<Todo[]>(getInitialTodos());
+    const handleAddTodo = () => {
+        if (!todoText) return
+        todoStore.addTodo({ completed: false, id: crypto.randomUUID(), text: todoText })
+        setTodoText("")
+    }
 
-  useEffect(() => {
-    localStorage.setItem("todoList", JSON.stringify(todoList));
-  }, [todoList]);
+    return (
+        <div className="wrapper">
+            <div style={{ padding: 20 }}>
+                <div className="top">
+                    <input
+                        className="input"
+                        value={todoText}
+                        type="text"
+                        placeholder="Напишите заметку"
+                        onKeyDown={(ev) => {
+                            if (ev.key === "Enter") {
+                                handleAddTodo()
+                            }
+                        }}
+                        onChange={(e) => {
+                            setTodoText(e.target.value)
+                        }}
+                    />
 
-  const result = [...todoList];
+                    <button className="input__btn" onClick={handleAddTodo} disabled={!todoText}>
+                        Добавить
+                    </button>
+                    <button onClick={handleAddTodo} className="knopka">
+                        +
+                    </button>
+                </div>
 
-  function deleteTodo(id: string) {
-    const filtered = result.filter((x) => x.id !== id);
-    setTodoList(filtered);
-  }
-
-  function onEditTodo(newTodo: Todo) {
-    const i = result.findIndex((x) => x.id === newTodo.id);
-    result[i] = newTodo;
-    setTodoList(result);
-  }
-
-  function addTodo() {
-    result.unshift({
-      text: todoText,
-      id: crypto.randomUUID(),
-      completed: false,
-    });
-    setTodoList(result);
-    setTodoText("");
-  }
-
-  return (
-    <div className="wrapper">
-      <div style={{ padding: 20 }}>
-        <div className="top">
-          <input
-            className="input"
-            value={todoText}
-            type="text"
-            placeholder="Напишите заметку"
-            // onKeyDown={(ev) => {
-            //   if (ev.key === "Enter") {
-            //     addTodo();
-            //   }
-            // }}
-            onChange={(e) => {
-              setTodoText(e.target.value);
-            }}
-          />
-
-          <button className="input__btn" onClick={addTodo} disabled={!todoText}>
-            Добавить
-          </button>
-          <button onClick={addTodo} className="knopka">
-            +
-          </button>
+                <ul className="ultodo">
+                    {todoStore.uncompletedTodos.map((todo) => (
+                        <li key={todo.id} className="element">
+                            <TodoView
+                                todo={todo}
+                                onDelete={() => todoStore.deleteTodo(todo.id)}
+                                onEditTodo={(todo) => todoStore.completeTodo(todo.id)}
+                            />
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-
-        <ul className="ultodo">
-          {todoList
-            .filter((t) => !t.completed)
-            .map((todo) => (
-              <li key={todo.id} className="element">
-                <Todo
-                  todo={todo}
-                  onDelete={() => deleteTodo(todo.id)}
-                  onEditTodo={(todo) => onEditTodo(todo)}
-                />
-              </li>
-            ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
+    )
+})
 
 type TodoProps = {
-  todo: Todo;
-  onDelete: () => void;
-  onEditTodo: (todo: Todo) => void;
-};
-
-function Todo(props: TodoProps) {
-  const [open, setOpen] = useState(false);
-  const [editText, setEditText] = useState(props.todo.text);
-
-  return (
-    <section className="todo__container">
-      <div className="todoscroll">
-        <p className="todotext">{props.todo.text}</p>
-      </div>
-      <div className="input__container">
-        <div style={{ display: "flex", gap: "5px" }}>
-          <button
-            onClick={() => {
-              const todo = { ...props.todo, completed: true };
-              props.onEditTodo(todo);
-            }}
-            className="close__btn"
-          >
-            Выполнить
-          </button>
-          <button
-            className="close__btn"
-            onClick={() => {
-              setOpen(!open);
-            }}
-          >
-            {(!open && "Изменить") || "Закрыть"}
-          </button>
-          {open && (
-            <>
-              <input
-                className="changeinput"
-                type="text"
-                placeholder="Изменить"
-                value={editText}
-                onChange={(ev) => setEditText(ev.target.value)}
-              />
-              <button
-                className="done__btn"
-                onClick={() => {
-                  const todo = { ...props.todo, text: editText };
-                  props.onEditTodo(todo);
-                  setOpen(false);
-                }}
-              >
-                ∨
-              </button>
-            </>
-          )}
-        </div>
-        <button className="close" onClick={() => props.onDelete()}>
-          ✕
-        </button>
-      </div>
-    </section>
-  );
+    todo: Todo
+    onDelete: () => void
+    onEditTodo: (todo: Todo) => void
 }
 
-const getDoneInitialTodos = (): Todo[] => {
-  const todos: Todo[] = JSON.parse(localStorage.getItem("todoList") ?? "[]");
-  return todos.filter((todo) => todo.completed);
-};
+function TodoView(props: TodoProps) {
+    const [open, setOpen] = useState(false)
+    const [editText, setEditText] = useState(props.todo.text)
 
-function DoneTodo() {
-  const done: Todo[] = getDoneInitialTodos();
-
-  return (
-    <section className="ultodo">
-      {done.map((todo) => (
-        <div className="todo__container">
-          <div className="todoscroll">
-            <p key={todo.id}>{todo.text}</p>
-          </div>
-        </div>
-      ))}
-    </section>
-  );
+    return (
+        <section className="todo__container">
+            <div className="todoscroll">
+                <p className="todotext">{props.todo.text}</p>
+            </div>
+            <div className="input__container">
+                <div style={{ display: "flex", gap: "5px" }}>
+                    <button
+                        onClick={() => {
+                            const todo = { ...props.todo, completed: true }
+                            props.onEditTodo(todo)
+                        }}
+                        className="close__btn"
+                    >
+                        Выполнить
+                    </button>
+                    <button
+                        className="close__btn"
+                        onClick={() => {
+                            setOpen(!open)
+                        }}
+                    >
+                        {(!open && "Изменить") || "Закрыть"}
+                    </button>
+                    {open && (
+                        <>
+                            <input
+                                className="changeinput"
+                                type="text"
+                                placeholder="Изменить"
+                                value={editText}
+                                onChange={(ev) => setEditText(ev.target.value)}
+                            />
+                            <button
+                                className="done__btn"
+                                onClick={() => {
+                                    const todo = { ...props.todo, text: editText }
+                                    props.onEditTodo(todo)
+                                    setOpen(false)
+                                }}
+                            >
+                                ∨
+                            </button>
+                        </>
+                    )}
+                </div>
+                <button className="close" onClick={() => props.onDelete()}>
+                    ✕
+                </button>
+            </div>
+        </section>
+    )
 }
 
-export default App;
+const DoneTodo = observer(() => {
+    return (
+        <section className="ultodo">
+            {todoStore.completedTodos.map((todo) => (
+                <div className="todo__container">
+                    <div className="todoscroll">
+                        <p key={todo.id}>{todo.text}</p>
+                    </div>
+                </div>
+            ))}
+        </section>
+    )
+})
+
+export default App
