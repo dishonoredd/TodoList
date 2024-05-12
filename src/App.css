@@ -133,6 +133,7 @@ button {
 .todoscroll {
   width: 300px;
   overflow-x: scroll;
+  white-space: nowrap;
 }
 
 .todoscroll::-webkit-scrollbar {
