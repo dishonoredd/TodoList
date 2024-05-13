@@ -33,6 +33,11 @@ class TodoStore {
   deleteTodo = (id: string) => {
     this.todos = this.todos.filter((t) => t.id !== id);
   };
+
+  onEditToto = (todoText: string, id: string) => {
+    const todo = this.todos.find((t) => t.id === id);
+    if (todo) todo.text = todoText;
+  };
 }
 
 export const todoStore = new TodoStore();
